@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
+using WarehouseManagementSystem.Core;
+using WarehouseManagementSystem.Core.Security;
 using WarehouseManagementSystem.Data.Models;
 
 
@@ -10,6 +12,22 @@ public static class ModelBuilderExtensions
 {
     public static void SeedData(this ModelBuilder modelBuilder)
     {
+        var adminHash = PasswordHasher.Hash("admin123");
+        var staffHash = PasswordHasher.Hash("staff123");
+        var viewerHash = PasswordHasher.Hash("viewer123");
+
+        modelBuilder.Entity<Role>().HasData(
+            new Role { Id = 1, Name = AppRoles.Admin, Description = "Toàn quyền hệ thống" },
+            new Role { Id = 2, Name = AppRoles.Staff, Description = "Nhập xuất và quản lý hàng" },
+            new Role { Id = 3, Name = AppRoles.Viewer, Description = "Xem dashboard và báo cáo" }
+        );
+
+        modelBuilder.Entity<User>().HasData(
+            new User { Id = 1, Username = "admin", PasswordHash = adminHash, DisplayName = "Quản trị viên", RoleId = 1, IsActive = true, CreatedAt = new DateTime(2024, 1, 1) },
+            new User { Id = 2, Username = "thukho", PasswordHash = staffHash, DisplayName = "Nhân viên kho", RoleId = 2, IsActive = true, CreatedAt = new DateTime(2024, 1, 1) },
+            new User { Id = 3, Username = "xem", PasswordHash = viewerHash, DisplayName = "Người xem báo cáo", RoleId = 3, IsActive = true, CreatedAt = new DateTime(2024, 1, 1) }
+        );
+
         modelBuilder.Entity<Warehouse>().HasData(
             new Warehouse { Id = 1, Name = "Main Warehouse", Address = "123 Street, City", Manager = "John Doe" }
         );

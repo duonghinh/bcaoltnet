@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,5 +46,12 @@ public class StockItemRepository : Repository<StockItem>, IStockItemRepository
             .Include(si => si.Item)
             .Where(si => si.WarehouseId == warehouseId)
             .ToListAsync();
+    }
+
+    public async Task<StockItem?> GetByWarehouseAndItemAsync(int warehouseId, int itemId)
+    {
+        return await _context.StockItems
+            .Include(si => si.Item)
+            .FirstOrDefaultAsync(si => si.WarehouseId == warehouseId && si.ItemId == itemId);
     }
 }

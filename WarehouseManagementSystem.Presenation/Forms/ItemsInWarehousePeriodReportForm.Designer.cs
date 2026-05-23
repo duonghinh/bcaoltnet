@@ -1,58 +1,48 @@
-﻿namespace WarehouseManagementSystem.Presenation.Forms
+namespace WarehouseManagementSystem.Presenation.Forms
 {
     partial class ItemsInWarehousePeriodReportForm
     {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
-            {
                 components.Dispose();
-            }
             base.Dispose(disposing);
         }
 
-        #region Windows Form Designer generated code
-
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
         private void InitializeComponent()
         {
-            cmbWarehouses = new ComboBox();
-            label1 = new Label();
+            panelHeader = new Panel();
+            lblTitle = new Label();
             btnGenerateReport = new Button();
             dtpFromDate = new DateTimePicker();
             dtpToDate = new DateTimePicker();
             label2 = new Label();
             label3 = new Label();
+            panelHeader.SuspendLayout();
             SuspendLayout();
             // 
-            // cmbWarehouses
+            // panelHeader
             // 
-            cmbWarehouses.FormattingEnabled = true;
-            cmbWarehouses.Location = new Point(163, 188);
-            cmbWarehouses.Name = "cmbWarehouses";
-            cmbWarehouses.Size = new Size(265, 28);
-            cmbWarehouses.TabIndex = 0;
+            panelHeader.BackColor = SystemColors.ActiveCaptionText;
+            panelHeader.Controls.Add(lblTitle);
+            panelHeader.Dock = DockStyle.Top;
+            panelHeader.Location = new Point(0, 0);
+            panelHeader.Name = "panelHeader";
+            panelHeader.Size = new Size(1333, 125);
+            panelHeader.TabIndex = 7;
             // 
-            // label1
+            // lblTitle
             // 
-            label1.AutoSize = true;
-            label1.Location = new Point(163, 150);
-            label1.Name = "label1";
-            label1.Size = new Size(124, 20);
-            label1.TabIndex = 1;
-            label1.Text = "Select warehouse";
+            lblTitle.AutoSize = true;
+            lblTitle.Font = new Font("Arial Rounded MT Bold", 24F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            lblTitle.ForeColor = SystemColors.ButtonFace;
+            lblTitle.Location = new Point(389, 39);
+            lblTitle.Name = "lblTitle";
+            lblTitle.Size = new Size(380, 46);
+            lblTitle.TabIndex = 0;
+            lblTitle.Text = "Báo cáo hàng theo kỳ";
             // 
             // btnGenerateReport
             // 
@@ -60,20 +50,20 @@
             btnGenerateReport.Name = "btnGenerateReport";
             btnGenerateReport.Size = new Size(114, 41);
             btnGenerateReport.TabIndex = 2;
-            btnGenerateReport.Text = "Generate";
+            btnGenerateReport.Text = "Tạo báo cáo";
             btnGenerateReport.UseVisualStyleBackColor = true;
             btnGenerateReport.Click += btnGenerateReport_Click;
             // 
             // dtpFromDate
             // 
-            dtpFromDate.Location = new Point(510, 188);
+            dtpFromDate.Location = new Point(163, 188);
             dtpFromDate.Name = "dtpFromDate";
             dtpFromDate.Size = new Size(284, 27);
             dtpFromDate.TabIndex = 3;
             // 
             // dtpToDate
             // 
-            dtpToDate.Location = new Point(934, 189);
+            dtpToDate.Location = new Point(510, 188);
             dtpToDate.Name = "dtpToDate";
             dtpToDate.Size = new Size(266, 27);
             dtpToDate.TabIndex = 4;
@@ -81,20 +71,20 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(934, 150);
+            label2.Location = new Point(510, 150);
             label2.Name = "label2";
-            label2.Size = new Size(116, 20);
+            label2.Size = new Size(73, 20);
             label2.TabIndex = 5;
-            label2.Text = "End period date";
+            label2.Text = "Đến ngày";
             // 
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(510, 150);
+            label3.Location = new Point(163, 150);
             label3.Name = "label3";
-            label3.Size = new Size(122, 20);
+            label3.Size = new Size(64, 20);
             label3.TabIndex = 6;
-            label3.Text = "Start period date";
+            label3.Text = "Từ ngày";
             // 
             // ItemsInWarehousePeriodReportForm
             // 
@@ -106,18 +96,17 @@
             Controls.Add(dtpToDate);
             Controls.Add(dtpFromDate);
             Controls.Add(btnGenerateReport);
-            Controls.Add(label1);
-            Controls.Add(cmbWarehouses);
+            Controls.Add(panelHeader);
             Name = "ItemsInWarehousePeriodReportForm";
-            Text = "ItemsInWarehousePeriodReportForm";
+            Text = "Báo cáo hàng theo kỳ";
+            panelHeader.ResumeLayout(false);
+            panelHeader.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
 
-        #endregion
-
-        private ComboBox cmbWarehouses;
-        private Label label1;
+        private Panel panelHeader;
+        private Label lblTitle;
         private Button btnGenerateReport;
         private DateTimePicker dtpFromDate;
         private DateTimePicker dtpToDate;

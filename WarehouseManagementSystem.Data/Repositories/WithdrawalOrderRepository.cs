@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using WarehouseManagementSystem.Data.Models;
 using WarehouseManagementSystem.Data.Repositories.Interfaces;
 
@@ -24,8 +20,18 @@ public class WithdrawalOrderRepository : Repository<WithdrawalOrder>, IWithdrawa
 
     public async Task<IEnumerable<WithdrawalOrder>> GetByWarehouseAsync(int warehouseId)
     {
-        return _context.WithdrawalOrders
-                       .Where(order => order.WarehouseId == warehouseId)
-                       .ToList();
+        return await _context.WithdrawalOrders
+            .Where(order => order.WarehouseId == warehouseId)
+            .ToListAsync();
+    }
+
+    public async Task<WithdrawalOrder?> GetByIdWithDetailsAsync(int id)
+    {
+        return await _context.WithdrawalOrders
+            .Include(o => o.Warehouse)
+            .Include(o => o.Customer)
+            .Include(o => o.WithdrawalOrderDetails)
+                .ThenInclude(d => d.Item)
+            .FirstOrDefaultAsync(o => o.Id == id);
     }
 }

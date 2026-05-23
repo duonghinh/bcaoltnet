@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,4 +13,5 @@ public interface IStockItemRepository : IRepository<StockItem>
     Task<List<StockItem>> GetItemsByWarehousesAsync(List<int> warehouseIds);
     IQueryable<StockItem> GetQueryable();
     Task<IEnumerable<StockItem>> GetStockItemsWithItemAsync(int warehouseId);
+    Task<StockItem?> GetByWarehouseAndItemAsync(int warehouseId, int itemId);
 }

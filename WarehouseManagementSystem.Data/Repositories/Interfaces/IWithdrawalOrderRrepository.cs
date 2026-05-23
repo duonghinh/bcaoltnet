@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using WarehouseManagementSystem.Data.Models;
 
@@ -9,4 +9,5 @@ public interface IWithdrawalOrderRepository : IRepository<WithdrawalOrder>
 {
     Task<IEnumerable<WithdrawalOrder>> GetByDateRangeAsync(DateTime startDate, DateTime endDate);
     Task<IEnumerable<WithdrawalOrder>> GetByWarehouseAsync(int warehouseId);
+    Task<WithdrawalOrder?> GetByIdWithDetailsAsync(int id);
 }

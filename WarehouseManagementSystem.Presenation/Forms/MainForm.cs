@@ -1,13 +1,5 @@
-﻿using FontAwesome.Sharp;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+using FontAwesome.Sharp;
+using WarehouseManagementSystem.Core;
 using WarehouseManagementSystem.Presenation.Forms;
 
 namespace WarehouseManagementSystem.Presenation;
@@ -24,6 +16,24 @@ public partial class MainForm : Form
         leftBorderPanal = new Panel();
         leftBorderPanal.Size = new Size(7, 60);
         SidePanal.Controls.Add(leftBorderPanal);
+        ApplyPermissions();
+        lblUser.Text = $"{AppSession.Current?.DisplayName} ({AppSession.Current?.RoleName})";
+        OpenChildForm(new DashboardForm());
+        ActivateBtn(btnDashboard);
+    }
+
+    private void ApplyPermissions()
+    {
+        btnWarehouse.Enabled = AppSession.CanEditWarehouse;
+        btnItems.Enabled = AppSession.CanEditItems;
+        btnSupplyOrder.Enabled = AppSession.CanManageOrders;
+        btnWithdrawalOrder.Enabled = AppSession.CanManageOrders;
+        btnUsers.Visible = AppSession.CanManageUsers;
+        btnWarehousRepot.Enabled = AppSession.CanViewReports;
+        btnItemsInWarehousePeriodReport.Enabled = AppSession.CanViewReports;
+        btnItemsCloseToExpiration.Enabled = AppSession.CanViewReports;
+        btnDashboard.Enabled = AppSession.IsSignedIn;
+        btnActivityLog.Enabled = AppSession.IsSignedIn;
     }
 
     private void ActivateBtn(object sender)
@@ -63,12 +73,31 @@ public partial class MainForm : Form
         {
             panelContainer.Controls.Clear();
         }
+        currentChildForm = child;
         child.TopLevel = false;
         child.FormBorderStyle = FormBorderStyle.None;
         child.Dock = DockStyle.Fill;
         panelContainer.Controls.Add(child);
         child.BringToFront();
         child.Show();
+    }
+
+    private void btnDashboard_Click(object sender, EventArgs e)
+    {
+        ActivateBtn(sender);
+        OpenChildForm(new DashboardForm());
+    }
+
+    private void btnActivityLog_Click(object sender, EventArgs e)
+    {
+        ActivateBtn(sender);
+        OpenChildForm(new ActivityLogForm());
+    }
+
+    private void btnUsers_Click(object sender, EventArgs e)
+    {
+        ActivateBtn(sender);
+        OpenChildForm(new UserAccountsForm());
     }
 
     private void btnWarehouse_Click(object sender, EventArgs e)
@@ -83,34 +112,23 @@ public partial class MainForm : Form
         OpenChildForm(new ItemsForm());
     }
 
-    private void btnSupplier_Click(object sender, EventArgs e)
-    {
-        ActivateBtn(sender);
-        OpenChildForm(new SupplierForm());
-    }
-
-    private void btnCustomer_Click(object sender, EventArgs e)
-    {
-        ActivateBtn(sender);
-        OpenChildForm(new CustomerForm());
-    }
-
     private void btnSupplyOrder_Click(object sender, EventArgs e)
     {
         ActivateBtn(sender);
         OpenChildForm(new SupplyOrderForm());
     }
 
-    // Đã xóa btnWithdrawalOrder_Click
-    // Đã xóa btnStockTransfer_Click
+    private void btnWithdrawalOrder_Click(object sender, EventArgs e)
+    {
+        ActivateBtn(sender);
+        OpenChildForm(new WithdrawalOrderForm());
+    }
 
     private void btnWarehousRepot_Click(object sender, EventArgs e)
     {
         ActivateBtn(sender);
         OpenChildForm(new WarehouseStateReportForm());
     }
-
-    // Đã xóa iconButton1_Click (Warehouses Items Report)
 
     private void btnItemsInWarehousePeriodReport_Click(object sender, EventArgs e)
     {
@@ -122,5 +140,14 @@ public partial class MainForm : Form
     {
         ActivateBtn(sender);
         OpenChildForm(new ItemsCloseToExpirationReport());
+    }
+
+    private void btnLogout_Click(object sender, EventArgs e)
+    {
+        if (MessageBox.Show("Đăng xuất?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+            return;
+
+        AppSession.SignOut();
+        Application.Restart();
     }
 }

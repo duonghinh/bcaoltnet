@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,6 +11,8 @@ public class Item : BaseEntity
     public string Code { get; set; }
     public string Name { get; set; }
     public string MeasurementUnit { get; set; }
+    public string Category { get; set; } = "Khác";
+    public int MinStockQuantity { get; set; }
     public ICollection<ItemUnit> ItemUnits { get; set; } = new List<ItemUnit>();
     public ICollection<StockItem> StockItems { get; set; } = new List<StockItem>();
 }

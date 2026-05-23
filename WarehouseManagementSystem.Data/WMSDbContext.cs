@@ -26,6 +26,9 @@ public class WMSDbContext : DbContext
     public DbSet<WithdrawalOrder> WithdrawalOrders { get; set; }
     public DbSet<StockTransfer> StockTransfers { get; set; }
     public DbSet<StockTransferDetail> StockTransferDetails { get; set; }
+    public DbSet<Role> Roles { get; set; }
+    public DbSet<User> Users { get; set; }
+    public DbSet<ActivityLog> ActivityLogs { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -81,6 +84,16 @@ public class WMSDbContext : DbContext
             .HasOne(d => d.Item)
             .WithMany()
             .HasForeignKey(d => d.ItemId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<User>()
+            .HasIndex(u => u.Username)
+            .IsUnique();
+
+        modelBuilder.Entity<User>()
+            .HasOne(u => u.Role)
+            .WithMany(r => r.Users)
+            .HasForeignKey(u => u.RoleId)
             .OnDelete(DeleteBehavior.Restrict);
 
         // Data Seeding

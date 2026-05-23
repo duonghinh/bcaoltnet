@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System;
 using System.Windows.Forms;
 using WarehouseManagementSystem.Business.Services;
+using WarehouseManagementSystem.Core;
 using WarehouseManagementSystem.Data;
 using WarehouseManagementSystem.Data.UOW;
 using WarehouseManagementSystem.Data.UOW.Interfaces;
@@ -24,99 +18,46 @@ public partial class WarehouseForm : Form
         InitializeComponent();
         _unitOfWork = new UnitOfWork(new WMSDbContext());
         _warehouseService = new WarehouseService(_unitOfWork);
-        LoadWarehouses();
+        if (!AppSession.CanEditWarehouse)
+        {
+            txtName.ReadOnly = true;
+            txtAddress.ReadOnly = true;
+            txtManager.ReadOnly = true;
+            btnSave.Enabled = false;
+        }
+        LoadWarehouseInfo();
     }
 
-    private async Task LoadWarehouses()
+    private async void LoadWarehouseInfo()
     {
-        var warehouseList = await _warehouseService.GetAllWarehousesAsync();
+        var warehouse = await _warehouseService.GetWarehouseByIdAsync(WarehouseConstants.DefaultWarehouseId);
+        if (warehouse == null)
+        {
+            MessageBox.Show("Chưa có thông tin kho. Vui lòng chạy migration/seed dữ liệu.", "Thông báo",
+                MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            return;
+        }
 
-        dgvWarehouses.DataSource = warehouseList;
-
-        dgvWarehouses.Columns["Id"].Visible = false;
-        dgvWarehouses.AllowUserToDeleteRows = false;
-        dgvWarehouses.ReadOnly = true;
-    }
-
-    private void ResetFormInput()
-    {
-        txtName.Text = string.Empty;
-        txtAddress.Text = string.Empty;
-        txtManager.Text = string.Empty;
-    }
-
-    private async Task FillFrom(int id)
-    {
-        var warehouse = await _warehouseService.GetWarehouseByIdAsync(id);
-        txtManager.Text = warehouse.Manager;
         txtName.Text = warehouse.Name;
         txtAddress.Text = warehouse.Address;
+        txtManager.Text = warehouse.Manager;
     }
 
-    private async void btnAdd_Click(object sender, EventArgs e)
+    private async void btnSave_Click(object sender, EventArgs e)
     {
         try
         {
-            await _warehouseService.AddWarehouseAsync(txtName.Text, txtAddress.Text, txtManager.Text);
-            //MessageBox.Show("Warehouse added successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            LoadWarehouses(); // Refresh DataGridView
-            ResetFormInput();
+            await _warehouseService.UpdateWarehouseAsync(
+                WarehouseConstants.DefaultWarehouseId,
+                txtName.Text,
+                txtAddress.Text,
+                txtManager.Text);
+
+            MessageBox.Show("Đã lưu thông tin kho!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
         catch (Exception ex)
         {
-            MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        }
-    }
-
-    private async void btnUpdate_Click(object sender, EventArgs e)
-    {
-        if (dgvWarehouses.SelectedRows.Count > 0)
-        {
-            int id = Convert.ToInt32(dgvWarehouses.SelectedRows[0].Cells["Id"].Value);
-
-            try
-            {
-                await _warehouseService.UpdateWarehouseAsync(id, txtName.Text, txtAddress.Text, txtManager.Text);
-                MessageBox.Show("Warehouse updated successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                await LoadWarehouses();
-                ResetFormInput();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-    }
-
-    private async void btnDelete_Click(object sender, EventArgs e)
-    {
-        if (dgvWarehouses.SelectedRows.Count > 0)
-        {
-            int id = Convert.ToInt32(dgvWarehouses.SelectedRows[0].Cells["Id"].Value);
-
-            var confirm = MessageBox.Show("Are you sure you want to delete this warehouse?", "Confirm", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-            if (confirm == DialogResult.Yes)
-            {
-                try
-                {
-                    await _warehouseService.DeleteWarehouseAsync(id);
-                    MessageBox.Show("Warehouse deleted successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    LoadWarehouses();
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-        }
-    }
-
-    private void dgvWarehouses_Click(object sender, EventArgs e)
-    {
-        if (dgvWarehouses.SelectedRows.Count > 0)
-        {
-            int id = Convert.ToInt32(dgvWarehouses.SelectedRows[0].Cells["Id"].Value);
-            FillFrom(id);
+            MessageBox.Show(ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 }

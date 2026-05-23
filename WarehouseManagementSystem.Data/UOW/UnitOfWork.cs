@@ -1,4 +1,4 @@
-﻿using WarehouseManagementSystem.Data.Models;
+using WarehouseManagementSystem.Data.Models;
 using WarehouseManagementSystem.Data.Repositories.Interfaces;
 using WarehouseManagementSystem.Data.Repositories;
 using WarehouseManagementSystem.Data.UOW.Interfaces;
@@ -12,11 +12,11 @@ public class UnitOfWork : IUnitOfWork
     public IWarehouseRepository Warehouses { get; }
     public IRepository<Item> Items { get; }
     public IStockItemRepository StockItems { get; }
-    public ISupplierRepository Suppliers { get; }
-    public IRepository<Customer> Customers { get; }
     public ISupplyOrderRepository SupplyOrders {  get; }
     public IRepository<SupplyOrderDetail> SupplyOrderDetails { get; }
     public IWithdrawalOrderRepository WithdrawalOrders { get; }
+    public IRepository<User> Users { get; }
+    public IRepository<Role> Roles { get; }
     public IRepository<StockTransfer> StockTransfers { get; }
     public IStockItemRepository StockItemRepository { get; }
 
@@ -25,11 +25,11 @@ public class UnitOfWork : IUnitOfWork
         _context = context;
         Warehouses = new WarehouseRepository(_context);
         Items = new Repository<Item>(_context);
-        Suppliers = new SupplierRepository(_context);
-        Customers = new Repository<Customer>(_context);
         SupplyOrders = new SupplyOrderRepository(_context);
         SupplyOrderDetails = new Repository<SupplyOrderDetail>(_context);
         WithdrawalOrders = new WithdrawalOrderRepository(_context);
+        Users = new Repository<User>(_context);
+        Roles = new Repository<Role>(_context);
         StockTransfers = new Repository<StockTransfer>(_context);
         StockItemRepository = new StockItemRepository(_context);
         StockItems = new StockItemRepository(_context);

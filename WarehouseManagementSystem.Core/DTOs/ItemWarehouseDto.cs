@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,7 +13,11 @@ public class ItemWarehouseDto
     public string WarehouseName { get; set; }
     public int Quantity { get; set; }
     public string ItemCode { get; set; }
+    public string Category { get; set; }
+    public string MeasurementUnit { get; set; }
     public DateTime ProductionDate { get; set; }
     public DateTime ExpirationDate { get; set; }
+    public int MinStockQuantity { get; set; }
+    public bool IsLowStock => MinStockQuantity > 0 && Quantity <= MinStockQuantity;
     public List<ItemUnitDto> Units { get; set; } = new List<ItemUnitDto>();
 }

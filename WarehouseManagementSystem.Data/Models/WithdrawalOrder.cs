@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,6 +16,7 @@ public class WithdrawalOrder : BaseEntity
 
     public string OrderNumber { get; set; }
     public DateTime OrderDate { get; set; }
+    public string RecipientName { get; set; } = "";
 
     public ICollection<WithdrawalOrderDetail> WithdrawalOrderDetails { get; set; } = new List<WithdrawalOrderDetail>();
 }

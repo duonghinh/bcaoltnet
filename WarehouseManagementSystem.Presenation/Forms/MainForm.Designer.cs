@@ -1,4 +1,4 @@
-﻿namespace WarehouseManagementSystem.Presenation
+namespace WarehouseManagementSystem.Presenation
 {
     partial class MainForm
     {
@@ -30,12 +30,17 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             SidePanal = new Panel();
+            panelTopBar = new Panel();
+            lblUser = new Label();
+            btnLogout = new Button();
+            btnActivityLog = new FontAwesome.Sharp.IconButton();
+            btnUsers = new FontAwesome.Sharp.IconButton();
+            btnDashboard = new FontAwesome.Sharp.IconButton();
             btnItemsCloseToExpiration = new FontAwesome.Sharp.IconButton();
             btnItemsInWarehousePeriodReport = new FontAwesome.Sharp.IconButton();
             btnWarehousRepot = new FontAwesome.Sharp.IconButton();
             btnSupplyOrder = new FontAwesome.Sharp.IconButton();
-            btnCustomer = new FontAwesome.Sharp.IconButton();
-            btnSupplier = new FontAwesome.Sharp.IconButton();
+            btnWithdrawalOrder = new FontAwesome.Sharp.IconButton();
             btnItems = new FontAwesome.Sharp.IconButton();
             btnWarehouse = new FontAwesome.Sharp.IconButton();
             panel1 = new Panel();
@@ -49,12 +54,14 @@
             // SidePanal
             // 
             SidePanal.BackColor = Color.Black;
+            SidePanal.Controls.Add(btnActivityLog);
+            SidePanal.Controls.Add(btnUsers);
+            SidePanal.Controls.Add(btnDashboard);
             SidePanal.Controls.Add(btnItemsCloseToExpiration);
             SidePanal.Controls.Add(btnItemsInWarehousePeriodReport);
             SidePanal.Controls.Add(btnWarehousRepot);
             SidePanal.Controls.Add(btnSupplyOrder);
-            SidePanal.Controls.Add(btnCustomer);
-            SidePanal.Controls.Add(btnSupplier);
+            SidePanal.Controls.Add(btnWithdrawalOrder);
             SidePanal.Controls.Add(btnItems);
             SidePanal.Controls.Add(btnWarehouse);
             SidePanal.Controls.Add(panel1);
@@ -63,6 +70,63 @@
             SidePanal.Name = "SidePanal";
             SidePanal.Size = new Size(220, 885);
             SidePanal.TabIndex = 0;
+            // 
+            // btnDashboard
+            // 
+            btnDashboard.Dock = DockStyle.Top;
+            btnDashboard.FlatAppearance.BorderSize = 0;
+            btnDashboard.FlatStyle = FlatStyle.Flat;
+            btnDashboard.Font = new Font("Century Gothic", 10.2F, FontStyle.Bold);
+            btnDashboard.ForeColor = Color.WhiteSmoke;
+            btnDashboard.IconChar = FontAwesome.Sharp.IconChar.ChartLine;
+            btnDashboard.IconColor = Color.WhiteSmoke;
+            btnDashboard.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            btnDashboard.ImageAlign = ContentAlignment.MiddleLeft;
+            btnDashboard.Padding = new Padding(10, 0, 20, 0);
+            btnDashboard.Size = new Size(220, 60);
+            btnDashboard.Text = "Tổng quan";
+            btnDashboard.TextAlign = ContentAlignment.MiddleLeft;
+            btnDashboard.TextImageRelation = TextImageRelation.ImageBeforeText;
+            btnDashboard.UseVisualStyleBackColor = true;
+            btnDashboard.Click += btnDashboard_Click;
+            // 
+            // btnUsers
+            // 
+            btnUsers.Dock = DockStyle.Top;
+            btnUsers.FlatAppearance.BorderSize = 0;
+            btnUsers.FlatStyle = FlatStyle.Flat;
+            btnUsers.Font = new Font("Century Gothic", 9F, FontStyle.Bold);
+            btnUsers.ForeColor = Color.WhiteSmoke;
+            btnUsers.IconChar = FontAwesome.Sharp.IconChar.Users;
+            btnUsers.IconColor = Color.WhiteSmoke;
+            btnUsers.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            btnUsers.ImageAlign = ContentAlignment.MiddleLeft;
+            btnUsers.Padding = new Padding(10, 0, 20, 0);
+            btnUsers.Size = new Size(220, 60);
+            btnUsers.Text = "Người dùng";
+            btnUsers.TextAlign = ContentAlignment.MiddleLeft;
+            btnUsers.TextImageRelation = TextImageRelation.ImageBeforeText;
+            btnUsers.UseVisualStyleBackColor = true;
+            btnUsers.Click += btnUsers_Click;
+            // 
+            // btnActivityLog
+            // 
+            btnActivityLog.Dock = DockStyle.Top;
+            btnActivityLog.FlatAppearance.BorderSize = 0;
+            btnActivityLog.FlatStyle = FlatStyle.Flat;
+            btnActivityLog.Font = new Font("Century Gothic", 9F, FontStyle.Bold);
+            btnActivityLog.ForeColor = Color.WhiteSmoke;
+            btnActivityLog.IconChar = FontAwesome.Sharp.IconChar.ClipboardList;
+            btnActivityLog.IconColor = Color.WhiteSmoke;
+            btnActivityLog.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            btnActivityLog.ImageAlign = ContentAlignment.MiddleLeft;
+            btnActivityLog.Padding = new Padding(10, 0, 20, 0);
+            btnActivityLog.Size = new Size(220, 60);
+            btnActivityLog.Text = "Nhật ký";
+            btnActivityLog.TextAlign = ContentAlignment.MiddleLeft;
+            btnActivityLog.TextImageRelation = TextImageRelation.ImageBeforeText;
+            btnActivityLog.UseVisualStyleBackColor = true;
+            btnActivityLog.Click += btnActivityLog_Click;
             // 
             // btnItemsCloseToExpiration
             // 
@@ -80,7 +144,7 @@
             btnItemsCloseToExpiration.Padding = new Padding(10, 0, 20, 0);
             btnItemsCloseToExpiration.Size = new Size(220, 60);
             btnItemsCloseToExpiration.TabIndex = 11;
-            btnItemsCloseToExpiration.Text = "Items Close To Expiration";
+            btnItemsCloseToExpiration.Text = "Hàng sắp hết hạn";
             btnItemsCloseToExpiration.TextAlign = ContentAlignment.MiddleLeft;
             btnItemsCloseToExpiration.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnItemsCloseToExpiration.UseVisualStyleBackColor = true;
@@ -102,7 +166,7 @@
             btnItemsInWarehousePeriodReport.Padding = new Padding(10, 0, 20, 0);
             btnItemsInWarehousePeriodReport.Size = new Size(220, 79);
             btnItemsInWarehousePeriodReport.TabIndex = 10;
-            btnItemsInWarehousePeriodReport.Text = "Items In Warehouse Period Report";
+            btnItemsInWarehousePeriodReport.Text = "Báo cáo hàng theo kỳ";
             btnItemsInWarehousePeriodReport.TextAlign = ContentAlignment.MiddleLeft;
             btnItemsInWarehousePeriodReport.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnItemsInWarehousePeriodReport.UseVisualStyleBackColor = true;
@@ -124,7 +188,7 @@
             btnWarehousRepot.Padding = new Padding(10, 0, 20, 0);
             btnWarehousRepot.Size = new Size(220, 60);
             btnWarehousRepot.TabIndex = 8;
-            btnWarehousRepot.Text = "Warehouse State Report";
+            btnWarehousRepot.Text = "Báo cáo tình trạng kho";
             btnWarehousRepot.TextAlign = ContentAlignment.MiddleLeft;
             btnWarehousRepot.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnWarehousRepot.UseVisualStyleBackColor = true;
@@ -141,60 +205,36 @@
             btnSupplyOrder.IconColor = Color.WhiteSmoke;
             btnSupplyOrder.IconFont = FontAwesome.Sharp.IconFont.Auto;
             btnSupplyOrder.ImageAlign = ContentAlignment.MiddleLeft;
-            btnSupplyOrder.Location = new Point(0, 380);
+            btnSupplyOrder.Location = new Point(0, 320);
             btnSupplyOrder.Name = "btnSupplyOrder";
             btnSupplyOrder.Padding = new Padding(10, 0, 20, 0);
             btnSupplyOrder.Size = new Size(220, 60);
             btnSupplyOrder.TabIndex = 5;
-            btnSupplyOrder.Text = "Supply Order";
+            btnSupplyOrder.Text = "Phiếu nhập";
             btnSupplyOrder.TextAlign = ContentAlignment.MiddleLeft;
             btnSupplyOrder.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnSupplyOrder.UseVisualStyleBackColor = true;
             btnSupplyOrder.Click += btnSupplyOrder_Click;
             // 
-            // btnCustomer
+            // btnWithdrawalOrder
             // 
-            btnCustomer.Dock = DockStyle.Top;
-            btnCustomer.FlatAppearance.BorderSize = 0;
-            btnCustomer.FlatStyle = FlatStyle.Flat;
-            btnCustomer.Font = new Font("Century Gothic", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            btnCustomer.ForeColor = Color.WhiteSmoke;
-            btnCustomer.IconChar = FontAwesome.Sharp.IconChar.Users;
-            btnCustomer.IconColor = Color.WhiteSmoke;
-            btnCustomer.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            btnCustomer.ImageAlign = ContentAlignment.MiddleLeft;
-            btnCustomer.Location = new Point(0, 320);
-            btnCustomer.Name = "btnCustomer";
-            btnCustomer.Padding = new Padding(10, 0, 20, 0);
-            btnCustomer.Size = new Size(220, 60);
-            btnCustomer.TabIndex = 4;
-            btnCustomer.Text = "Customer";
-            btnCustomer.TextAlign = ContentAlignment.MiddleLeft;
-            btnCustomer.TextImageRelation = TextImageRelation.ImageBeforeText;
-            btnCustomer.UseVisualStyleBackColor = true;
-            btnCustomer.Click += btnCustomer_Click;
-            // 
-            // btnSupplier
-            // 
-            btnSupplier.Dock = DockStyle.Top;
-            btnSupplier.FlatAppearance.BorderSize = 0;
-            btnSupplier.FlatStyle = FlatStyle.Flat;
-            btnSupplier.Font = new Font("Century Gothic", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            btnSupplier.ForeColor = Color.WhiteSmoke;
-            btnSupplier.IconChar = FontAwesome.Sharp.IconChar.Truck;
-            btnSupplier.IconColor = Color.WhiteSmoke;
-            btnSupplier.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            btnSupplier.ImageAlign = ContentAlignment.MiddleLeft;
-            btnSupplier.Location = new Point(0, 260);
-            btnSupplier.Name = "btnSupplier";
-            btnSupplier.Padding = new Padding(10, 0, 20, 0);
-            btnSupplier.Size = new Size(220, 60);
-            btnSupplier.TabIndex = 3;
-            btnSupplier.Text = "Supplier";
-            btnSupplier.TextAlign = ContentAlignment.MiddleLeft;
-            btnSupplier.TextImageRelation = TextImageRelation.ImageBeforeText;
-            btnSupplier.UseVisualStyleBackColor = true;
-            btnSupplier.Click += btnSupplier_Click;
+            btnWithdrawalOrder.Dock = DockStyle.Top;
+            btnWithdrawalOrder.FlatAppearance.BorderSize = 0;
+            btnWithdrawalOrder.FlatStyle = FlatStyle.Flat;
+            btnWithdrawalOrder.Font = new Font("Century Gothic", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            btnWithdrawalOrder.ForeColor = Color.WhiteSmoke;
+            btnWithdrawalOrder.IconChar = FontAwesome.Sharp.IconChar.ArrowRightFromBracket;
+            btnWithdrawalOrder.IconColor = Color.WhiteSmoke;
+            btnWithdrawalOrder.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            btnWithdrawalOrder.ImageAlign = ContentAlignment.MiddleLeft;
+            btnWithdrawalOrder.Name = "btnWithdrawalOrder";
+            btnWithdrawalOrder.Padding = new Padding(10, 0, 20, 0);
+            btnWithdrawalOrder.Size = new Size(220, 60);
+            btnWithdrawalOrder.Text = "Phiếu xuất";
+            btnWithdrawalOrder.TextAlign = ContentAlignment.MiddleLeft;
+            btnWithdrawalOrder.TextImageRelation = TextImageRelation.ImageBeforeText;
+            btnWithdrawalOrder.UseVisualStyleBackColor = true;
+            btnWithdrawalOrder.Click += btnWithdrawalOrder_Click;
             // 
             // btnItems
             // 
@@ -212,7 +252,7 @@
             btnItems.Padding = new Padding(10, 0, 20, 0);
             btnItems.Size = new Size(220, 60);
             btnItems.TabIndex = 2;
-            btnItems.Text = "Items";
+            btnItems.Text = "Mặt hàng";
             btnItems.TextAlign = ContentAlignment.MiddleLeft;
             btnItems.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnItems.UseVisualStyleBackColor = true;
@@ -234,7 +274,7 @@
             btnWarehouse.Padding = new Padding(10, 0, 20, 0);
             btnWarehouse.Size = new Size(220, 60);
             btnWarehouse.TabIndex = 1;
-            btnWarehouse.Text = "Warehouse";
+            btnWarehouse.Text = "Thông tin kho";
             btnWarehouse.TextAlign = ContentAlignment.MiddleLeft;
             btnWarehouse.TextImageRelation = TextImageRelation.ImageBeforeText;
             btnWarehouse.UseVisualStyleBackColor = true;
@@ -260,12 +300,34 @@
             pictureBox1.TabIndex = 0;
             pictureBox1.TabStop = false;
             // 
+            // panelTopBar
+            // 
+            panelTopBar.Dock = DockStyle.Top;
+            panelTopBar.Height = 40;
+            panelTopBar.Controls.Add(lblUser);
+            panelTopBar.Controls.Add(btnLogout);
+            // 
+            // lblUser
+            // 
+            lblUser.AutoSize = true;
+            lblUser.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            lblUser.Location = new Point(230, 8);
+            lblUser.Text = "Người dùng";
+            // 
+            // btnLogout
+            // 
+            btnLogout.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnLogout.Location = new Point(1300, 5);
+            btnLogout.Size = new Size(100, 30);
+            btnLogout.Text = "Đăng xuất";
+            btnLogout.Click += btnLogout_Click;
+            // 
             // panelContainer
             // 
             panelContainer.Dock = DockStyle.Fill;
-            panelContainer.Location = new Point(220, 0);
+            panelContainer.Location = new Point(220, 40);
             panelContainer.Name = "panelContainer";
-            panelContainer.Size = new Size(1200, 885);
+            panelContainer.Size = new Size(1200, 845);
             panelContainer.TabIndex = 1;
             // 
             // MainForm
@@ -274,10 +336,11 @@
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1420, 885);
             Controls.Add(panelContainer);
+            Controls.Add(panelTopBar);
             Controls.Add(SidePanal);
             MaximizeBox = false;
             Name = "MainForm";
-            Text = "MainForm";
+            Text = "Hệ thống quản lý kho";
             WindowState = FormWindowState.Maximized;
             SidePanal.ResumeLayout(false);
             panel1.ResumeLayout(false);
@@ -291,13 +354,18 @@
         private Panel panel1;
         private FontAwesome.Sharp.IconButton btnWarehouse;
         private FontAwesome.Sharp.IconButton btnSupplyOrder;
-        private FontAwesome.Sharp.IconButton btnCustomer;
-        private FontAwesome.Sharp.IconButton btnSupplier;
+        private FontAwesome.Sharp.IconButton btnWithdrawalOrder;
         private FontAwesome.Sharp.IconButton btnItems;
         private PictureBox pictureBox1;
         private Panel panelContainer;
         private FontAwesome.Sharp.IconButton btnWarehousRepot;
         private FontAwesome.Sharp.IconButton btnItemsInWarehousePeriodReport;
         private FontAwesome.Sharp.IconButton btnItemsCloseToExpiration;
+        private FontAwesome.Sharp.IconButton btnDashboard;
+        private FontAwesome.Sharp.IconButton btnActivityLog;
+        private FontAwesome.Sharp.IconButton btnUsers;
+        private Panel panelTopBar;
+        private Label lblUser;
+        private Button btnLogout;
     }
 }

@@ -1,97 +1,60 @@
-﻿using AspNetCore.Reporting;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.IO; // Thêm thư viện này để dùng Path và File
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+using AspNetCore.Reporting;
 using WarehouseManagementSystem.Business.Services;
-using WarehouseManagementSystem.Data.Models;
+using WarehouseManagementSystem.Core;
 using WarehouseManagementSystem.Data.UOW;
 using WarehouseManagementSystem.Data.UOW.Interfaces;
 
-namespace WarehouseManagementSystem.Presenation.Forms
+namespace WarehouseManagementSystem.Presenation.Forms;
+
+public partial class ItemsInWarehousePeriodReportForm : Form
 {
-    public partial class ItemsInWarehousePeriodReportForm : Form
+    private readonly IUnitOfWork _unitOfWork;
+    private readonly WarehouseService _warehouseService;
+
+    public ItemsInWarehousePeriodReportForm()
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly WarehouseService _warehouseService;
-        public ItemsInWarehousePeriodReportForm()
+        InitializeComponent();
+        _unitOfWork = new UnitOfWork(new Data.WMSDbContext());
+        _warehouseService = new WarehouseService(_unitOfWork);
+    }
+
+    private async void btnGenerateReport_Click(object sender, EventArgs e)
+    {
+        try
         {
-            InitializeComponent();
-            _unitOfWork = new UnitOfWork(new Data.WMSDbContext());
-            _warehouseService = new WarehouseService(_unitOfWork);
+            DateTime fromDate = dtpFromDate.Value;
+            DateTime toDate = dtpToDate.Value;
 
-            LoadWarehouses();
-        }
+            var dataTable = await _warehouseService.GetItemsInWarehouseForPeriod(
+                WarehouseConstants.DefaultWarehouseId, fromDate, toDate);
 
-        private async Task LoadWarehouses()
-        {
-            var warehouses = await _warehouseService.GetAllWarehousesAsync();
-
-            cmbWarehouses.DataSource = warehouses;
-            cmbWarehouses.DisplayMember = "Name";
-            cmbWarehouses.ValueMember = "Id";
-        }
-
-        private async void btnGenerateReport_Click(object sender, EventArgs e)
-        {
-            try
+            if (dataTable.Rows.Count == 0)
             {
-                // Get selected warehouse ID
-                if (cmbWarehouses.SelectedItem is not Warehouse selectedWarehouse)
-                {
-                    MessageBox.Show("Please select a warehouse.");
-                    return;
-                }
-
-                // Get the date range from the UI
-                DateTime fromDate = dtpFromDate.Value;
-                DateTime toDate = dtpToDate.Value;
-
-                // Get the data from the service
-                var dataTable = await _warehouseService.GetItemsInWarehouseForPeriod(selectedWarehouse.Id, fromDate, toDate);
-
-                if (dataTable.Rows.Count == 0)
-                {
-                    MessageBox.Show("No items found for the selected warehouse and period.");
-                    return;
-                }
-
-                // --- SỬA ĐƯỜNG DẪN Ở ĐÂY ---
-                // Dùng Path.Combine để tự động nối thư mục chạy app với thư mục Reports
-                string reportPath = Path.Combine(Application.StartupPath, "Reports", "ItemsInWarehouseForPeriodReport.rdlc");
-
-                // Kiểm tra file tồn tại trước khi load để tránh crash
-                if (!File.Exists(reportPath))
-                {
-                    MessageBox.Show($"Không tìm thấy file mẫu báo cáo tại: {reportPath}\nBạn hãy kiểm tra lại thư mục bin\\Debug\\Reports", "Lỗi file", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-
-                LocalReport report = new LocalReport(reportPath);
-                // ---------------------------
-
-                // Add the data source to the report
-                report.AddDataSource("ItemsInWarehouseForPeriodDataSet", dataTable);
-
-                // Render the report to PDF
-                var result = report.Execute(RenderType.Pdf);
-
-                // Save the PDF file
-                string pdfPath = Path.Combine(Application.StartupPath, $"ItemsInWarehouseForPeriodReport_{DateTime.Now:yyyyMMdd_HHmmss}.pdf");
-                File.WriteAllBytes(pdfPath, result.MainStream);
-
-                MessageBox.Show($"Report generated successfully!\nSaved at: {pdfPath}", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Không có hàng trong khoảng thời gian đã chọn.", "Thông tin", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
             }
-            catch (Exception ex)
+
+            string reportPath = Path.Combine(Application.StartupPath, "Reports", "ItemsInWarehousePeriodReport.rdlc");
+
+            if (!File.Exists(reportPath))
             {
-                MessageBox.Show($"Error generating report: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Không tìm thấy file mẫu báo cáo tại: {reportPath}\nBạn hãy kiểm tra lại thư mục bin\\Debug\\Reports", "Lỗi file", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
             }
+
+            var report = new LocalReport(reportPath);
+            report.AddDataSource("ItemsInWarehousePeriodDataSet", dataTable);
+
+            var result = report.Execute(RenderType.Pdf);
+            string pdfPath = Path.Combine(Application.StartupPath, $"ItemsInWarehousePeriodReport_{DateTime.Now:yyyyMMdd_HHmmss}.pdf");
+            File.WriteAllBytes(pdfPath, result.MainStream);
+
+            MessageBox.Show($"Tạo báo cáo thành công!\nĐã lưu tại: {pdfPath}", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Lỗi khi tạo báo cáo: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 }

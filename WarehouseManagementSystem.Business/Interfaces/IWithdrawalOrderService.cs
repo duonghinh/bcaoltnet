@@ -1,18 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
 using WarehouseManagementSystem.Core.DTOs;
-using WarehouseManagementSystem.Data.Models;
 
 namespace WarehouseManagementSystem.Business.Interfaces;
 
-
 public interface IWithdrawalOrderService
 {
-    Task<IEnumerable<WithdrawalOrderDTO>> GetAllWithdrawalOrdersAsync();
-    Task<WithdrawalOrderDTO> GetWithdrawalOrderByIdAsync(int id);
-    Task CreateOrderAsync(WithdrawalOrderDTO orderDto);
-    Task UpdateOrderAsync(WithdrawalOrderDTO orderDto);
-    Task DeleteAsync(int id);
-    Task<IEnumerable<WithdrawalOrderDTO>> GetOrdersByDateRange(DateTime startDate, DateTime endDate);
-    Task<IEnumerable<WithdrawalOrderDTO>> GetOrdersByWarehouse(int warehouseId);
+    Task<List<OrderSummaryDto>> GetOrderSummariesAsync();
+    Task<OrderInvoiceDto?> GetInvoiceAsync(int orderId);
+    Task<int> CreateOrderAsync(DateTime orderDate, string recipientName, List<WithdrawalOrderLineInputDto> lines);
+    Task UpdateOrderAsync(int orderId, DateTime orderDate, string recipientName, List<WithdrawalOrderLineInputDto> lines);
+    Task DeleteOrderAsync(int orderId);
 }

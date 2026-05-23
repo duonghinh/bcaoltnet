@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using WarehouseManagementSystem.Data.Models;
+using WarehouseManagementSystem.Core.DTOs;
 
 namespace WarehouseManagementSystem.Business.Interfaces;
 
-
 public interface ISupplyOrderService
 {
-    Task<IEnumerable<SupplyOrder>> GetAllSupplyOrdersAsync();
-    Task<SupplyOrder> GetSupplyOrderByIdAsync(int id);
-    Task CreateSupplyOrderAsync(int warehouseId, int supplierId, string orderNumber, DateTime orderDate, List<SupplyOrderDetail> details);
+    Task<List<OrderSummaryDto>> GetOrderSummariesAsync();
+    Task<OrderInvoiceDto?> GetInvoiceAsync(int orderId);
+    Task<int> CreateOrderAsync(DateTime orderDate, List<SupplyOrderLineInputDto> lines);
+    Task UpdateOrderAsync(int orderId, DateTime orderDate, List<SupplyOrderLineInputDto> lines);
+    Task DeleteOrderAsync(int orderId);
 }
