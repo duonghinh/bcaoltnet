@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using Microsoft.EntityFrameworkCore;
 using WarehouseManagementSystem.Business.Interfaces;
+using WarehouseManagementSystem.Data;
 using WarehouseManagementSystem.Data.Models;
 using WarehouseManagementSystem.Data.UOW.Interfaces;
 
@@ -12,10 +14,12 @@ namespace WarehouseManagementSystem.Business.Services;
 public class WarehouseService : IWarehouseService
 {
     private readonly IUnitOfWork _unitOfWork;
+    private readonly WMSDbContext _dbContext;
 
     public WarehouseService(IUnitOfWork unitOfWork)
     {
         _unitOfWork = unitOfWork;
+        _dbContext = new WMSDbContext();
     }
 
     public async Task<IEnumerable<Warehouse>> GetAllWarehousesAsync()
@@ -77,9 +81,9 @@ public class WarehouseService : IWarehouseService
         {
             dataTable.Rows.Add(
                 item?.Item?.Name ?? "Unknown",
-                item.Quantity,
-                item.ProductionDate.ToShortDateString(),
-                item.ExpirationDate.ToShortDateString()
+                (item?.Quantity ?? 0).ToString(),
+                FormatDate(item?.ProductionDate),
+                FormatDate(item?.ExpirationDate)
             );
         }
 
@@ -100,15 +104,15 @@ public class WarehouseService : IWarehouseService
         // Filter the stock items based on the selected warehouse IDs
         var filteredStockItems = stockItems.Where(si => warehouseIds.Contains(si.WarehouseId)).ToList();
 
-        foreach (var item in stockItems)
+        foreach (var item in filteredStockItems)
         {
             string warehouseName = item?.Warehouse?.Name ?? "Unknown";
             string itemName = item?.Item?.Name ?? "Unknown";
             int quantity = item?.Quantity ?? 0;
-            string productionDate = item?.ProductionDate.ToShortDateString() ?? "N/A";
-            string expirationDate = item?.ExpirationDate.ToShortDateString() ?? "N/A";
+            string productionDate = FormatDate(item?.ProductionDate);
+            string expirationDate = FormatDate(item?.ExpirationDate);
 
-            dataTable.Rows.Add(warehouseName, itemName, quantity, productionDate, expirationDate);
+            dataTable.Rows.Add(warehouseName, itemName, quantity.ToString(), productionDate, expirationDate);
         }
 
         return dataTable;
@@ -124,37 +128,45 @@ public class WarehouseService : IWarehouseService
         dataTable.Columns.Add("ExpirationDate");
         dataTable.Columns.Add("DaysInWarehouse");
 
-        var stockItems = await _unitOfWork.StockItemRepository
-            .GetAllWithIncludesAsync( si => si.Item, si => si.Warehouse);
+        var from = fromDate.Date;
+        var toExclusive = toDate.Date.AddDays(1);
 
-        stockItems = stockItems.Where(si => si.WarehouseId == warehouseId).ToList();
+        var details = await _dbContext.Set<SupplyOrderDetail>()
+            .AsNoTracking()
+            .Include(d => d.Item)
+            .Include(d => d.SupplyOrder)
+                .ThenInclude(o => o.Warehouse)
+            .Where(d => d.SupplyOrder.WarehouseId == warehouseId
+                && d.SupplyOrder.OrderDate >= from
+                && d.SupplyOrder.OrderDate < toExclusive)
+            .OrderBy(d => d.SupplyOrder.OrderDate)
+            .ThenBy(d => d.Item.Name)
+            .ToListAsync();
 
-        foreach (var item in stockItems)
+        foreach (var detail in details)
         {
-            // Find the corresponding supply order detail using ItemId and ProductionDate
-            var supplyOrderDetail = await _unitOfWork.SupplyOrderDetails
-                .FindAsync(sod => sod.ItemId == item.ItemId && sod.ProductionDate == item.ProductionDate);
+            var orderDate = detail.SupplyOrder.OrderDate.Date;
+            var daysInWarehouse = Math.Max(0, (DateTime.Today - orderDate).Days);
 
-            var orderDate = supplyOrderDetail.FirstOrDefault()?.SupplyOrder?.OrderDate ?? DateTime.MinValue;
-
-            // Calculate how long the item has been in the warehouse
-            var daysInWarehouse = (DateTime.Now - orderDate).Days;
-
-            // Check if the item has been in the warehouse within the specified period
-            if (orderDate >= fromDate && orderDate <= toDate)
-            {
-                dataTable.Rows.Add(
-                    item.Warehouse.Name,
-                    item.Item.Name,
-                    item.Quantity,
-                    item.ProductionDate.ToShortDateString(),
-                    item.ExpirationDate.ToShortDateString(),
-                    daysInWarehouse
-                );
-            }
+            dataTable.Rows.Add(
+                detail.SupplyOrder.Warehouse?.Name ?? "Unknown",
+                detail.Item?.Name ?? "Unknown",
+                detail.Quantity.ToString(),
+                FormatDate(detail.ProductionDate),
+                FormatDate(detail.ExpirationDate),
+                daysInWarehouse.ToString()
+            );
         }
 
         return dataTable;
+    }
+
+    private static string FormatDate(DateTime? date)
+    {
+        if (!date.HasValue || date.Value == default)
+            return "";
+
+        return date.Value.ToString("dd/MM/yyyy");
     }
 
 

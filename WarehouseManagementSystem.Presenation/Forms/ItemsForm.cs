@@ -53,6 +53,15 @@ public partial class ItemsForm : Form
         SetHeader("Quantity", "Số lượng");
         SetHeader("ProductionDate", "Ngày SX");
         SetHeader("ExpirationDate", "Hạn SD");
+        SetHeader("MinStockQuantity", "Tồn tối thiểu");
+        SetHeader("IsLowStock", "Tồn thấp");
+
+        if (dgvItems.Columns.Contains("ItemName"))
+            dgvItems.Columns["ItemName"].MinimumWidth = 180;
+        if (dgvItems.Columns.Contains("MinStockQuantity"))
+            dgvItems.Columns["MinStockQuantity"].Width = 105;
+        if (dgvItems.Columns.Contains("IsLowStock"))
+            dgvItems.Columns["IsLowStock"].Width = 85;
     }
 
     private void SetHeader(string col, string text)

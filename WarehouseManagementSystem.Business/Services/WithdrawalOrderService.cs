@@ -10,7 +10,7 @@ namespace WarehouseManagementSystem.Business.Services;
 
 public class WithdrawalOrderService : IWithdrawalOrderService
 {
-    private const int DefaultCustomerId = 1;
+    private const int PreferredDefaultCustomerId = 1;
 
     private readonly IUnitOfWork _unitOfWork;
     private readonly WMSDbContext _dbContext;
@@ -91,7 +91,7 @@ public class WithdrawalOrderService : IWithdrawalOrderService
             var order = new WithdrawalOrder
             {
                 WarehouseId = WarehouseConstants.DefaultWarehouseId,
-                CustomerId = DefaultCustomerId,
+                CustomerId = await GetDefaultCustomerIdAsync(),
                 OrderNumber = GenerateOrderNumber("PX"),
                 OrderDate = orderDate,
                 RecipientName = recipientName?.Trim() ?? "",
@@ -198,10 +198,37 @@ public class WithdrawalOrderService : IWithdrawalOrderService
         }
     }
 
+    private async Task<int> GetDefaultCustomerIdAsync()
+    {
+        if (await _dbContext.Customers.AnyAsync(c => c.Id == PreferredDefaultCustomerId))
+            return PreferredDefaultCustomerId;
+
+        var existingCustomerId = await _dbContext.Customers
+            .OrderBy(c => c.Id)
+            .Select(c => c.Id)
+            .FirstOrDefaultAsync();
+
+        if (existingCustomerId > 0)
+            return existingCustomerId;
+
+        var customer = new Customer
+        {
+            Name = "Khách hàng mặc định",
+            Phone = "",
+            Email = "",
+            CreatedAt = DateTime.Now
+        };
+        _dbContext.Customers.Add(customer);
+        await _dbContext.SaveChangesAsync();
+        return customer.Id;
+    }
+
     private async Task ApplyStockDecreaseAsync(int itemId, int quantity)
     {
-        var stock = await _dbContext.StockItems
-            .FirstOrDefaultAsync(s => s.WarehouseId == WarehouseConstants.DefaultWarehouseId && s.ItemId == itemId);
+        var stock = _dbContext.StockItems.Local
+            .FirstOrDefault(s => s.WarehouseId == WarehouseConstants.DefaultWarehouseId && s.ItemId == itemId)
+            ?? await _dbContext.StockItems
+                .FirstOrDefaultAsync(s => s.WarehouseId == WarehouseConstants.DefaultWarehouseId && s.ItemId == itemId);
 
         if (stock == null || stock.Quantity < quantity)
         {
@@ -215,8 +242,10 @@ public class WithdrawalOrderService : IWithdrawalOrderService
 
     private async Task ApplyStockIncreaseAsync(int itemId, int quantity)
     {
-        var stock = await _dbContext.StockItems
-            .FirstOrDefaultAsync(s => s.WarehouseId == WarehouseConstants.DefaultWarehouseId && s.ItemId == itemId)
+        var stock = _dbContext.StockItems.Local
+            .FirstOrDefault(s => s.WarehouseId == WarehouseConstants.DefaultWarehouseId && s.ItemId == itemId)
+            ?? await _dbContext.StockItems
+                .FirstOrDefaultAsync(s => s.WarehouseId == WarehouseConstants.DefaultWarehouseId && s.ItemId == itemId)
             ?? throw new InvalidOperationException("Không tìm thấy tồn kho để hoàn tác.");
 
         stock.Quantity += quantity;

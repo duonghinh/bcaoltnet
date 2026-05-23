@@ -34,6 +34,7 @@ public partial class WithdrawalOrderForm : Form
         dgvOrders.DataSource = orders;
         if (dgvOrders.Columns.Contains("OrderId"))
             dgvOrders.Columns["OrderId"].Visible = false;
+        ApplyOrderGridHeaders();
     }
 
     private async Task LoadStockItemsComboAsync()
@@ -93,6 +94,32 @@ public partial class WithdrawalOrderForm : Form
             l.Quantity,
             l.MeasurementUnit
         }).ToList();
+        ApplyPendingGridHeaders();
+    }
+
+    private void ApplyOrderGridHeaders()
+    {
+        SetHeader(dgvOrders, "OrderNumber", "Số phiếu");
+        SetHeader(dgvOrders, "OrderDate", "Ngày phiếu");
+        SetHeader(dgvOrders, "CreatedAt", "Ngày tạo");
+        SetHeader(dgvOrders, "UpdatedAt", "Ngày sửa");
+        SetHeader(dgvOrders, "OrderType", "Loại phiếu");
+        SetHeader(dgvOrders, "LineCount", "Số dòng");
+        SetHeader(dgvOrders, "TotalQuantity", "Tổng SL");
+    }
+
+    private void ApplyPendingGridHeaders()
+    {
+        SetHeader(dgvPendingLines, "ItemCode", "Mã hàng");
+        SetHeader(dgvPendingLines, "ItemName", "Tên hàng");
+        SetHeader(dgvPendingLines, "Quantity", "Số lượng");
+        SetHeader(dgvPendingLines, "MeasurementUnit", "ĐVT");
+    }
+
+    private static void SetHeader(DataGridView grid, string columnName, string headerText)
+    {
+        if (grid.Columns.Contains(columnName))
+            grid.Columns[columnName].HeaderText = headerText;
     }
 
     private async void btnSaveOrder_Click(object sender, EventArgs e)

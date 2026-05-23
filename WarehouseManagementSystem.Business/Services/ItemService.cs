@@ -182,28 +182,36 @@ public class ItemService : IItemService
         dataTable.Columns.Add("ExpirationDate");
         dataTable.Columns.Add("DaysUntilExpiration");
 
-        var currentDate = DateTime.Now;
+        var currentDate = DateTime.Today;
         var stockItems = await _unitOfWork.StockItemRepository
             .GetAllWithIncludesAsync(si => si.Item, si => si.Warehouse);
 
         var filteredItems = stockItems
             .Where(si => si.WarehouseId == WarehouseConstants.DefaultWarehouseId
                 && si.ExpirationDate != default
-                && (si.ExpirationDate - currentDate).TotalDays <= daysThreshold)
+                && si.ExpirationDate.Date >= currentDate
+                && (si.ExpirationDate.Date - currentDate).TotalDays <= daysThreshold)
             .ToList();
 
         foreach (var item in filteredItems)
         {
+            var daysUntilExpiration = Math.Max(0, (item.ExpirationDate.Date - currentDate).Days);
+
             dataTable.Rows.Add(
-                item.Item.Name,
-                item.Warehouse.Name,
-                item.Quantity,
-                item.ProductionDate.ToShortDateString(),
-                item.ExpirationDate.ToShortDateString(),
-                (item.ExpirationDate - currentDate).Days);
+                item.Item?.Name ?? "Unknown",
+                item.Warehouse?.Name ?? "Unknown",
+                item.Quantity.ToString(),
+                FormatDate(item.ProductionDate),
+                FormatDate(item.ExpirationDate),
+                daysUntilExpiration.ToString());
         }
 
         return dataTable;
+    }
+
+    private static string FormatDate(DateTime date)
+    {
+        return date == default ? "" : date.ToString("dd/MM/yyyy");
     }
 
     private static ItemWarehouseDto MapToDto(StockItem s) => new()

@@ -37,7 +37,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>Item Name</Value>
+                              <Value>Tên hàng</Value>
                               <Style />
                             </TextRun>
                           </TextRuns>
@@ -67,7 +67,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>Warehouse Name</Value>
+                              <Value>Tên kho</Value>
                               <Style />
                             </TextRun>
                           </TextRuns>
@@ -97,7 +97,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>Quantity</Value>
+                              <Value>Số lượng</Value>
                               <Style />
                             </TextRun>
                           </TextRuns>
@@ -127,7 +127,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>Production Date</Value>
+                              <Value>Ngày SX</Value>
                               <Style />
                             </TextRun>
                           </TextRuns>
@@ -157,7 +157,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>Expiration Date</Value>
+                              <Value>Hạn SD</Value>
                               <Style />
                             </TextRun>
                           </TextRuns>
@@ -187,7 +187,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>Days Until Expiration</Value>
+                              <Value>Ngày còn lại</Value>
                               <Style />
                             </TextRun>
                           </TextRuns>
@@ -222,7 +222,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=Fields!ItemName.Value</Value>
+                              <Value>=IIf(IsNothing(Fields!ItemName.Value), "", Fields!ItemName.Value)</Value>
                               <Style />
                             </TextRun>
                           </TextRuns>
@@ -252,7 +252,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=Fields!WarehouseName.Value</Value>
+                              <Value>=IIf(IsNothing(Fields!WarehouseName.Value), "", Fields!WarehouseName.Value)</Value>
                               <Style />
                             </TextRun>
                           </TextRuns>
@@ -282,7 +282,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=Fields!Quantity.Value</Value>
+                              <Value>=IIf(IsNothing(Fields!Quantity.Value), "", Fields!Quantity.Value)</Value>
                               <Style />
                             </TextRun>
                           </TextRuns>
@@ -312,7 +312,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=Fields!ProductionDate.Value</Value>
+                              <Value>=IIf(IsNothing(Fields!ProductionDate.Value), "", Fields!ProductionDate.Value)</Value>
                               <Style />
                             </TextRun>
                           </TextRuns>
@@ -342,7 +342,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=Fields!ExpirationDate.Value</Value>
+                              <Value>=IIf(IsNothing(Fields!ExpirationDate.Value), "", Fields!ExpirationDate.Value)</Value>
                               <Style />
                             </TextRun>
                           </TextRuns>
@@ -372,7 +372,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>=Fields!DaysUntilExpiration.Value</Value>
+                              <Value>=IIf(IsNothing(Fields!DaysUntilExpiration.Value), "", Fields!DaysUntilExpiration.Value)</Value>
                               <Style />
                             </TextRun>
                           </TextRuns>
@@ -445,7 +445,7 @@
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>Items close to expiration </Value>
+                  <Value>Hàng sắp hết hạn</Value>
                   <Style />
                 </TextRun>
               </TextRuns>

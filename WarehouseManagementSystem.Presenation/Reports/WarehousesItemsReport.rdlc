@@ -34,7 +34,7 @@
 												<Paragraph>
 													<TextRuns>
 														<TextRun>
-															<Value>Warehouse Name</Value>
+                          <Value>Tên kho</Value>
 															<Style />
 														</TextRun>
 													</TextRuns>
@@ -64,7 +64,7 @@
 												<Paragraph>
 													<TextRuns>
 														<TextRun>
-															<Value>Item Name</Value>
+                          <Value>Tên hàng</Value>
 															<Style />
 														</TextRun>
 													</TextRuns>
@@ -94,7 +94,7 @@
 												<Paragraph>
 													<TextRuns>
 														<TextRun>
-															<Value>Quantity</Value>
+                          <Value>Số lượng</Value>
 															<Style />
 														</TextRun>
 													</TextRuns>
@@ -124,7 +124,7 @@
 												<Paragraph>
 													<TextRuns>
 														<TextRun>
-															<Value>Production Date</Value>
+                          <Value>Ngày SX</Value>
 															<Style />
 														</TextRun>
 													</TextRuns>
@@ -154,7 +154,7 @@
 												<Paragraph>
 													<TextRuns>
 														<TextRun>
-															<Value>Expiration Date</Value>
+                          <Value>Hạn SD</Value>
 															<Style />
 														</TextRun>
 													</TextRuns>
@@ -382,7 +382,7 @@
 						<Paragraph>
 							<TextRuns>
 								<TextRun>
-									<Value>Items Report</Value>
+                  <Value>Báo cáo hàng trong kho</Value>
 									<Style />
 								</TextRun>
 							</TextRuns>

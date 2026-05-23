@@ -37,7 +37,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>Warehouse Name</Value>
+                              <Value>Tên kho</Value>
                               <Style />
                             </TextRun>
                           </TextRuns>
@@ -67,7 +67,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>Item Name</Value>
+                              <Value>Tên hàng</Value>
                               <Style />
                             </TextRun>
                           </TextRuns>
@@ -97,7 +97,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>Quantity</Value>
+                              <Value>Số lượng</Value>
                               <Style />
                             </TextRun>
                           </TextRuns>
@@ -127,7 +127,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>Production Date</Value>
+                              <Value>Ngày SX</Value>
                               <Style />
                             </TextRun>
                           </TextRuns>
@@ -157,7 +157,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>Expiration Date</Value>
+                              <Value>Hạn SD</Value>
                               <Style />
                             </TextRun>
                           </TextRuns>
@@ -187,7 +187,7 @@
                         <Paragraph>
                           <TextRuns>
                             <TextRun>
-                              <Value>Days In Warehouse</Value>
+                              <Value>Số ngày trong kho</Value>
                               <Style />
                             </TextRun>
                           </TextRuns>
@@ -446,7 +446,7 @@
             <Paragraph>
               <TextRuns>
                 <TextRun>
-                  <Value>Items in the warehouse for a while</Value>
+                  <Value>Hàng nhập kho theo kỳ</Value>
                   <Style />
                 </TextRun>
               </TextRuns>

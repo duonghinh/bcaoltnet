@@ -10,7 +10,7 @@ namespace WarehouseManagementSystem.Business.Services;
 
 public class SupplyOrderService : ISupplyOrderService
 {
-    private const int DefaultSupplierId = 1;
+    private const int PreferredDefaultSupplierId = 1;
 
     private readonly IUnitOfWork _unitOfWork;
     private readonly WMSDbContext _dbContext;
@@ -91,7 +91,7 @@ public class SupplyOrderService : ISupplyOrderService
             var order = new SupplyOrder
             {
                 WarehouseId = WarehouseConstants.DefaultWarehouseId,
-                SupplierId = DefaultSupplierId,
+                SupplierId = await GetDefaultSupplierIdAsync(),
                 OrderNumber = GenerateOrderNumber("PN"),
                 OrderDate = orderDate,
                 CreatedAt = DateTime.Now,
@@ -233,10 +233,40 @@ public class SupplyOrderService : ISupplyOrderService
         return item;
     }
 
+    private async Task<int> GetDefaultSupplierIdAsync()
+    {
+        if (await _dbContext.Suppliers.AnyAsync(s => s.Id == PreferredDefaultSupplierId))
+            return PreferredDefaultSupplierId;
+
+        var existingSupplierId = await _dbContext.Suppliers
+            .OrderBy(s => s.Id)
+            .Select(s => s.Id)
+            .FirstOrDefaultAsync();
+
+        if (existingSupplierId > 0)
+            return existingSupplierId;
+
+        var supplier = new Supplier
+        {
+            Name = "Nhà cung cấp mặc định",
+            Phone = "",
+            Fax = "",
+            Mobile = "",
+            Email = "",
+            Website = "",
+            CreatedAt = DateTime.Now
+        };
+        _dbContext.Suppliers.Add(supplier);
+        await _dbContext.SaveChangesAsync();
+        return supplier.Id;
+    }
+
     private async Task ApplyStockIncreaseAsync(int itemId, int quantity, DateTime productionDate, DateTime expirationDate)
     {
-        var stock = await _dbContext.StockItems
-            .FirstOrDefaultAsync(s => s.WarehouseId == WarehouseConstants.DefaultWarehouseId && s.ItemId == itemId);
+        var stock = _dbContext.StockItems.Local
+            .FirstOrDefault(s => s.WarehouseId == WarehouseConstants.DefaultWarehouseId && s.ItemId == itemId)
+            ?? await _dbContext.StockItems
+                .FirstOrDefaultAsync(s => s.WarehouseId == WarehouseConstants.DefaultWarehouseId && s.ItemId == itemId);
 
         if (stock == null)
         {
@@ -261,8 +291,10 @@ public class SupplyOrderService : ISupplyOrderService
 
     private async Task ApplyStockDecreaseAsync(int itemId, int quantity)
     {
-        var stock = await _dbContext.StockItems
-            .FirstOrDefaultAsync(s => s.WarehouseId == WarehouseConstants.DefaultWarehouseId && s.ItemId == itemId)
+        var stock = _dbContext.StockItems.Local
+            .FirstOrDefault(s => s.WarehouseId == WarehouseConstants.DefaultWarehouseId && s.ItemId == itemId)
+            ?? await _dbContext.StockItems
+                .FirstOrDefaultAsync(s => s.WarehouseId == WarehouseConstants.DefaultWarehouseId && s.ItemId == itemId)
             ?? throw new InvalidOperationException("Không tìm thấy tồn kho để hoàn tác.");
 
         if (stock.Quantity < quantity)

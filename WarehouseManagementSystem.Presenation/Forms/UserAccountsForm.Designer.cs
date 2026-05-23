@@ -63,12 +63,15 @@ partial class UserAccountsForm
         chkActive.Checked = true;
         btnNew.Text = "Mới";
         btnNew.Location = new Point(15, 310);
+        btnNew.Size = new Size(90, 32);
         btnNew.Click += btnNew_Click;
         btnSave.Text = "Lưu";
-        btnSave.Location = new Point(100, 310);
+        btnSave.Location = new Point(115, 310);
+        btnSave.Size = new Size(90, 32);
         btnSave.Click += btnSave_Click;
         btnDelete.Text = "Xóa";
-        btnDelete.Location = new Point(185, 310);
+        btnDelete.Location = new Point(215, 310);
+        btnDelete.Size = new Size(90, 32);
         btnDelete.Click += btnDelete_Click;
         panelEdit.Controls.AddRange(new Control[]
         {
